@@ -8,4 +8,8 @@
 require('head.php');
 ?>
 
+<body>
+<script  src="js/leap_controller.js" type="text/javascript"></script>
 <script  src="js/items_interface.js" type="text/javascript"></script>
+
+</body>
