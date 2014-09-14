@@ -31,17 +31,23 @@ function render() {
     if(go_down >= 0)
         camera.translateY(-0.1*go_down);
 
+    //Dolly
+    if(dolly_left >= 0)
+        camera.translateX(-0.1*dolly_left);
+    if(dolly_right >=0)
+        camera.translateX(0.1*dolly_right);
+
     //Rotate up/down
     if(look_up >=0)
-        camera.rotation.x += 0.05*look_up;
+        camera.rotateX(0.03*look_up);
     if(look_down >= 0)
-        camera.rotation.x -= 0.05*look_down;
+        camera.rotateX(-0.03*look_down);
 
     //Rotate left/right
     if(look_left_r >= 0 || look_left_y >= 0)
-        camera.rotation.y += 0.05*Math.max(look_left_r,look_left_y);
+        camera.rotateY(0.03*Math.max(look_left_r,look_left_y));
     if(look_right_r >=0 || look_right_y >=0)
-        camera.rotation.y -= 0.05*Math.max(look_right_r,look_right_y);
+        camera.rotateY(-0.03*Math.max(look_right_r,look_right_y));
 
     requestAnimationFrame(render);
     renderer.render(scene, camera);
