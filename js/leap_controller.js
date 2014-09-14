@@ -1,46 +1,48 @@
 /**
  * Created by Jacky on 9/13/14.
  */
+    //Constants
     var options = { enableGestures: true };
 
-    //Constants
+    var pitch, yaw, roll, height, depth;
 
-    var pitch, yaw, roll, height, depth = 0;
+    var go_forward = go_backward = go_up = go_down = look_left_y = look_right_y = look_left_r = look_right_r = look_up = look_down = dolly_left = dolly_right = 0;
 
-    var go_forward, go_backward, go_up, go_down, look_left_y, look_right_y, look_left_r, look_right_r, look_up, look_down, dolly_left, dolly_right = 0;
+    var translational_decay = 0.92;
+    var rotational_decay = 0.95;
 
-    var pitch_low = 0.1;
-    var pitch_high = 0.5;
+    //Threshold Values
+    var pitch_low = 0.3;
+    var pitch_high = 0.3;
     var pitch_low_max = -0.9;
     var pitch_high_max = 1.0;
 
-    var yaw_low = -0.2;
-    var yaw_high = 0.2;
+    var yaw_low = 0;
+    var yaw_high = 0;
     var yaw_low_max = -1.0;
     var yaw_high_max = 1.0;
 
-    var roll_high = 0.1;
-    var roll_low =-0.2;
+    var roll_high = -.05;
+    var roll_low =-.05;
     var roll_low_max = -1.5;
     var roll_high_max = 0.9;
 
-    var height_low = 150;
-    var height_high = 170;
+    var height_low = 160;
+    var height_high = 160;
     var height_low_max = 40;
     var height_high_max = 280;
 
-    var depth_low = 60;
+    var depth_low = 65;
     var depth_low_max = -50;
-    var depth_high = 70;
+    var depth_high = 65;
     var depth_high_max = 200;
 
-    var horiz_low = -30;
+    var horiz_low = 0;
     var horiz_low_max = -180;
-    var horiz_high = 30;
+    var horiz_high = 0;
     var horiz_high_max = 180;
 
     //Helper Functions
-
     var passThreshold = function(low, high, val){
         if(val<low)
             return -1;
@@ -49,16 +51,23 @@
         return 0;
     };
 
-    var getMultiplier = function(min, max, val){
-        return Math.abs(1/(max-min)*(val-min));
+    var decay = function(val,m){
+        if(val<0.0001)
+            return 0;
+        return val*m;
     };
 
     //Main Loop
     Leap.loop(options, function(frame){
 
-        if(frame.hands.length >0 && frame.hands[0].grabStrength < 0.9){
+        if(frame.hands.length >0 && frame.hands[0].pinchStrength < 0.95){
 
             var hand = frame.hands[0];
+            var pinch_strength = frame.hands[0].pinchStrength;
+
+            var getMultiplier = function(min, max, val){
+                return Math.abs(1/(max-min)*(val-min))*(1-pinch_strength);
+            };
 
             pitch =hand.pitch();
             yaw = hand.yaw();
@@ -66,8 +75,6 @@
             height = hand.palmPosition[1];
             depth = hand.palmPosition[2];
             horiz = hand.palmPosition[0];
-
-            console.log('horiz: '+horiz);
 
             var heightThreshold = passThreshold(height_low,height_high,height);
             if(heightThreshold == 1){
@@ -93,8 +100,6 @@
             else if(heightThreshold == 0)
                 dolly_left = dolly_right = 0;
 
-
-
             var depthThreshold = passThreshold(depth_low,depth_high,depth);
             if(depthThreshold == 1){
                 go_backward = getMultiplier(depth_high,depth_high_max,depth);
@@ -102,7 +107,6 @@
             }
             else if(depthThreshold == -1){
                 go_forward = getMultiplier(depth_low,depth_low_max,depth);
-                console.log('going forward: '+go_forward);
                 go_backward = 0;
             }
             else if(depthThreshold == 0)
@@ -138,7 +142,20 @@
 
         }
         else{
-            go_forward = go_backward = go_up = go_down = look_left_y = look_right_y = look_right_r = look_left_r = look_up = look_down = dolly_left = dolly_right = 0;
+
+            go_forward = decay(go_forward,translational_decay);
+            go_backward = decay(go_backward,translational_decay);
+            go_up = decay(go_up,translational_decay);
+            go_down = decay(go_down,translational_decay);
+            look_left_y = decay(look_left_y,rotational_decay);
+            look_right_y = decay(look_right_y,rotational_decay);
+            look_right_r = decay(look_right_r,rotational_decay);
+            look_left_r = decay(look_left_r,rotational_decay);
+            look_up = decay(look_up,rotational_decay);
+            look_down = decay(look_down,rotational_decay);
+            dolly_left = decay(dolly_left,translational_decay);
+            dolly_right = decay(dolly_right,translational_decay);
+
         }
 
     });

@@ -3,17 +3,46 @@
  */
 //Load Three.js
 
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
+//Scene Construction
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+//Append Renderer
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.shadowMapEnabled = true;
 $(document.body).append( renderer.domElement );
 
+//Construct Test Cube
 var geometry = new THREE.BoxGeometry(1,1,1);
-var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+var material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
 var cube = new THREE.Mesh( geometry, material );
+cube.castShadow = true;
+cube.receiveShadow = true;
 scene.add( cube );
+
+// create the geometry sphere
+geometry  = new THREE.SphereGeometry(200, 32, 32);
+// create the material, using a texture of startfield
+material  = new THREE.MeshBasicMaterial();
+material.map   = THREE.ImageUtils.loadTexture('assets/bg/nebula.png');
+material.side  = THREE.BackSide;
+// create the mesh based on geometry and material
+var bg  = new THREE.Mesh(geometry, material);
+scene.add(bg);
+
+
+//Lighting
+var amb_light = new THREE.AmbientLight( 0x404040 ); // soft white light
+var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+directionalLight.position.set( 5, 10, 5 );
+directionalLight.castShadow = true;
+directionalLight.receiveShadow = true;
+scene.add( directionalLight );
+scene.add( amb_light );
+
+
 
 camera.position.z = 5;
 
