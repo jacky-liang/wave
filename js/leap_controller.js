@@ -1,17 +1,22 @@
 /**
  * Created by Jacky on 9/13/14.
  */
-    //Constants
+    //Generate actionable constants based on leap data
+
+    //Enable Leap integration
     var options = { enableGestures: true };
 
+    //Stores data from leap
     var pitch, yaw, roll, height, depth;
 
-    var go_forward = go_backward = go_up = go_down = look_left_y = look_right_y = look_left_r = look_right_r = look_up = look_down = dolly_left = dolly_right = 0;
+    //Constants that can be used to direct navigation. Updated per frame
+    var go_forward = go_backward = go_up = go_down = look_left_y = look_right_y = turn_left_r = turn_right_r = look_up = look_down = dolly_left = dolly_right = 0;
 
+    //Decay constants to "simulate" inertia
     var translational_decay = 0.92;
     var rotational_decay = 0.95;
 
-    //Threshold Values
+    //Threshold Values. Please adjust with care.
     var pitch_low = 0.3;
     var pitch_high = 0.3;
     var pitch_low_max = -0.9;
@@ -60,7 +65,10 @@
     //Main Loop
     Leap.loop(options, function(frame){
 
+        //Only uses data from the first hand
         if(frame.hands.length >0 && frame.hands[0].pinchStrength < 0.95){
+
+            //Changes navigation variables
 
             var hand = frame.hands[0];
             var pinch_strength = frame.hands[0].pinchStrength;
@@ -134,23 +142,24 @@
 
             var rollThreshold = passThreshold(roll_low,roll_high,roll);
             if(rollThreshold == 1)
-                look_left_r = getMultiplier(roll_high,roll_high_max,roll);
+                turn_left_r = getMultiplier(roll_high,roll_high_max,roll);
             else if(rollThreshold == -1)
-                look_right_r = getMultiplier(roll_low,roll_low_max,roll);
+                turn_right_r = getMultiplier(roll_low,roll_low_max,roll);
             else if(rollThreshold == 0)
-                look_right_r = look_left_r = 0;
+                turn_right_r = turn_left_r = 0;
 
         }
         else{
 
+            //initiate decay in the absence of hands
             go_forward = decay(go_forward,translational_decay);
             go_backward = decay(go_backward,translational_decay);
             go_up = decay(go_up,translational_decay);
             go_down = decay(go_down,translational_decay);
             look_left_y = decay(look_left_y,rotational_decay);
             look_right_y = decay(look_right_y,rotational_decay);
-            look_right_r = decay(look_right_r,rotational_decay);
-            look_left_r = decay(look_left_r,rotational_decay);
+            turn_right_r = decay(turn_right_r,rotational_decay);
+            turn_left_r = decay(turn_left_r,rotational_decay);
             look_up = decay(look_up,rotational_decay);
             look_down = decay(look_down,rotational_decay);
             dolly_left = decay(dolly_left,translational_decay);
