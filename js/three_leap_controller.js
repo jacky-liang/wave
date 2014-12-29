@@ -7,12 +7,32 @@
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
+//Keeps track of all objects in scene that needs to face the camera
+function Orientable(scene){
+    this.objects = [];
+    this.scene = scene;
+
+    //orients all objects according to camera rotation. called every frame
+    this.orient = function orient(camera){
+        this.objects.forEach(function(obj){
+            obj.quaternion.copy(camera.quaternion);
+        });
+    };
+
+    //adds object to tracking list and also scene
+    this.add = function add(obj){
+        this.objects.push(obj);
+        this.scene.add(obj);
+    }
+}
+//the only orientable instance that needs to be used
+var all_orientables = new Orientable(scene);
+
 //Append Renderer
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.shadowMapEnabled = true;
 $(document.body).append( renderer.domElement );
-
 
 //Set Camera
 camera.position.z = 5;
@@ -55,6 +75,9 @@ function render() {
     if(turn_right_r >=0)
         camera.rotateZ(-0.03*turn_right_r);
 
+    all_orientables.orient(camera);
+
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
+render();

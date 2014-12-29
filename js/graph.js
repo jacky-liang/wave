@@ -62,8 +62,12 @@ function Node(Name){
 	this.compare=compare;
     this.getWeightedAdjList = getWeightedAdjList;
 	function addEdge(neighbour,weight){
-		this.adjList.push(neighbour);
-		this.weight.push(weight);	
+		if (this.adjList.indexOf(neighbour) == -1){
+            this.adjList.push(neighbour);
+            this.weight.push(weight);
+            neighbour.adjList.push(this);
+            neighbour.weight.push(weight);
+        }
 	}
 	
 	function getAdjList(){
