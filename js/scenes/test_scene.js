@@ -4,26 +4,6 @@
 
 const scale = 0.7;
 
-//Create data graph data structure
-var data = new Graph(),
-    A = data.addNode(new Item('A',0,{"depth":0})),
-    B = data.addNode(new Item('B',1,{"depth":-2})),
-    C = data.addNode(new Item('C',2,{"depth":2})),
-    D = data.addNode(new Item('D',3,{"depth":3})),
-    E = data.addNode(new Item('E',4,{"depth":4})),
-    F = data.addNode(new Item('F',5,{"depth":-5}));
-A.addEdge(B,2);
-A.addEdge(C,4);
-C.addEdge(D,8);
-C.addEdge(E,10);
-C.addEdge(F,10);
-/*
- B - A
-     \_ C - D
-        | \_ E
-        F
- */
-
 //Object Constructors
 var geo_BoxGeometry = function(x,y,z){
     return new THREE.BoxGeometry(x,y,z);
@@ -60,11 +40,12 @@ var construct_scene_children = function(node,geo,mat,origin,angle,weight){
     //make node object
     constructed.push(node);
     var node_obj = new THREE.Mesh(node_geo,mat);
-//    scene.add(node_obj);
     all_orientables.add(node_obj);
     node_obj.position.x = scale*(weight*Math.cos(angle) + origin.x);
     node_obj.position.y = scale*(weight*Math.sin(angle) + origin.y);
     node_obj.position.z = scale*(node.name.getDepth() + origin.z);
+
+//    console.log(node.name);
 
     //only constructs if node object doesn't already exist
     var adj = [];
@@ -96,8 +77,10 @@ var construct_scene_parent = function(graph,geo,mat){
 
         for(var i = 1;i<nodes.length;i++){
             var cur_node = nodes[i];
-            if (cur_node.adjList.length > pivot_length)
-                node_pivot = cur_node
+            if (cur_node.adjList.length > pivot_length){
+                node_pivot = cur_node;
+                pivot_length = cur_node.adjList.length;
+            }
         }
 
         //make pivot node object
@@ -106,7 +89,6 @@ var construct_scene_parent = function(graph,geo,mat){
         pivot_geo.castShadow = true;
         pivot_geo.receiveShadow = true;
         var pivot_obj = new THREE.Mesh(pivot_geo,mat);
-//        scene.add(pivot_obj);
         all_orientables.add(pivot_obj);
 
         //call construct_scene_children on adjs
@@ -124,9 +106,20 @@ var construct_scene_parent = function(graph,geo,mat){
     }
 };
 
-//Establish pivot node and construct the rest
-construct_scene_parent(data,geo_TextGeometry,material_green);
 
+var populateScene = function(items){
+    var graph = getSceneGraph(items);
+    construct_scene_parent(graph,geo_TextGeometry,material_green);
+};
+
+var loadScene = function(title){
+    getWikiData(title,20,populateScene);
+};
+
+loadScene("Philosophy");
+
+
+//other objects in scene
 // create the geometry sphere
 geometry  = new THREE.SphereGeometry(200, 32, 32);
 // create the material, using a texture of startfield
