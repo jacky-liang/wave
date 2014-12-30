@@ -7,15 +7,19 @@
  */
 require_once('simple_html_dom.php');
 
-function fetchFromWikipedia($title){
+function fetchFromWikipedia($url){
     //get raw json from wikipedia page w/ title name
-    $url = 'http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page='.$title;
     $ch = curl_init($url);
     curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt ($ch, CURLOPT_USERAGENT, "Wave"); // required by wikipedia.org server; use YOUR user agent with YOUR contact information. (otherwise your IP might get blocked)
     $c = curl_exec($ch);
 
     return $c;
+}
+
+function fetchContentFromWikipedia($title){
+    $url = 'http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page='.urlencode($title);
+    return fetchFromWikipedia($url);
 }
 
 class Item {
@@ -46,15 +50,22 @@ class Item {
     public static function constructAnItem($plain_title){
 
          //get raw json
-        $json = json_decode(fetchFromWikipedia($plain_title));
+        $json = json_decode(fetchContentFromWikipedia($plain_title));
 
         if(property_exists($json,'error'))
             return false;
 
         $raw = $json->{'parse'}->{'text'}->{'*'};
+        $html = str_get_html($raw);
+
+        //check if this is a redirect, if so, get proper title
+        if(strpos($raw,'redirectMsg') !== false){
+            preg_match('#index.php\?title=(.*)&#',
+                $raw, $matches);
+            return Item::constructAnItem($matches[1]);
+        }
 
         //make dom object
-        $html = str_get_html($raw);
         $first_p = $html->find('p',0);
 
         //get relevant info
@@ -100,7 +111,8 @@ class Title{
     }
 
     public static function is_valid($url){
-        if( !in_array($url,self::$parsed_url))
+        if( strpos($url,'Help:') == false &&
+            !in_array($url,self::$parsed_url))
             return true;
         else
             return false;
