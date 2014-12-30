@@ -8,7 +8,7 @@ function Item(title,content,pic,depth){
     this.pic = pic;
     this.depth = depth;
     this.getDepth = function(){
-        return this.depth*4;
+        return this.depth*3;
     }
 }
 
@@ -24,7 +24,7 @@ function generateChildItems(node,item,graph){
     */
     item.child_items.forEach(function(child_item){
        var child_node = generateAnItem(child_item,graph,node.name.getDepth()+1);
-        node.addEdge(child_node,8);
+        node.addEdge(child_node,12);
         generateChildItems(child_node,child_item,graph);
     });
 }

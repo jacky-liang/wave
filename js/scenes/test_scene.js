@@ -2,7 +2,7 @@
  * Created by jacky on 12/27/14.
  */
 
-const scale = 0.7;
+const scale = 1.0;
 
 //Object Constructors
 var geo_BoxGeometry = function(x,y,z){
@@ -14,15 +14,26 @@ var geo_CubeGeometry = function(size){
 var geo_TextGeometry = function(text){
     return new THREE.TextGeometry( text, {
         size: 1,
-        height: 1.0,
+        height: 0.2,
         curveSegments: 6,
         font: "helvetiker",
         weight: "normal",
         style: "normal" });
 };
+var geo_CynlinderGeometry = function(r_top, r_bot, h, r_seg){
+    return new THREE.CylinderGeometry(r_top,r_bot,h,r_seg);
+};
+var geo_LineGeo = function(from,to){
+    var line = new THREE.Geometry();
+    line.vertices.push(from);
+    line.vertices.push(to);
+    return line;
+}
 
 //Materials
-var material_green = new THREE.MeshPhongMaterial( { color: 0xD0D45D } );
+var matte_browishgreen = new THREE.MeshPhongMaterial( { color: 0xD0D45D } );
+var matte_lightblue = new THREE.MeshPhongMaterial( {color: 0x9EEDFF} );
+var line_material = new THREE.LineBasicMaterial({color: 0x9EEDFF});
 
 //array of nodes that have already been constructed
 var constructed = [];
@@ -45,7 +56,8 @@ var construct_scene_children = function(node,geo,mat,origin,angle,weight){
     node_obj.position.y = scale*(weight*Math.sin(angle) + origin.y);
     node_obj.position.z = scale*(node.name.getDepth() + origin.z);
 
-//    console.log(node.name);
+    //add line to connect node to parent
+    scene.add(new THREE.Line(geo_LineGeo(origin,node_obj.position),line_material,THREE.LineStrip));
 
     //only constructs if node object doesn't already exist
     var adj = [];
@@ -109,11 +121,11 @@ var construct_scene_parent = function(graph,geo,mat){
 
 var populateScene = function(items){
     var graph = getSceneGraph(items);
-    construct_scene_parent(graph,geo_TextGeometry,material_green);
+    construct_scene_parent(graph,geo_TextGeometry,matte_browishgreen);
 };
 
 var loadScene = function(title){
-    getWikiData(title,20,populateScene);
+    getWikiData(title,50,populateScene);
 };
 
 loadScene("Philosophy");
