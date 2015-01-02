@@ -7,6 +7,7 @@ function enableLoading(title){
 
 function getWikiData(title,limit,fn){
     enableLoading(title);
+    console.log('limit to '+limit);
     $.get( "data_gen.php",
         { title: title, limit: limit },
         fn,

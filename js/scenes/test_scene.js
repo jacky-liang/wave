@@ -11,10 +11,10 @@ var geo_BoxGeometry = function(x,y,z){
 var geo_CubeGeometry = function(size){
     return geo_BoxGeometry(size,size,size);
 };
-var geo_TextGeometry = function(text){
+var geo_TextGeometry = function(text,size){
     return new THREE.TextGeometry( text, {
-        size: 1,
-        height: 0.2,
+        size: size,
+        height: 0.05,
         curveSegments: 6,
         font: "helvetiker",
         weight: "normal",
@@ -40,24 +40,59 @@ var constructed = [];
 //max node construction limit
 var constructed_limit = 100;
 
+function setPosition(obj,pos){
+    obj.position.x = pos.x;
+    obj.position.y = pos.y;
+    obj.position.z = pos.z;
+}
+
 //Helper functions to turn nodes into 3D objects
-var construct_scene_children = function(node,geo,mat,origin,angle,weight){
+var placeNodeInScene = function(node,origin,angle,weight){
+    //places node in scene as object
+    //returns position of object
 
-    //creates geometric representation for all children
-    var node_geo = geo(node.name.title);
-    node_geo.castShadow = true;
-    node_geo.receiveShadow = true;
-
-    //make node object
+    //prevent repeats
     constructed.push(node);
-    var node_obj = new THREE.Mesh(node_geo,mat);
-    all_orientables.add(node_obj);
-    node_obj.position.x = scale*(weight*Math.cos(angle) + origin.x);
-    node_obj.position.y = scale*(weight*Math.sin(angle) + origin.y);
-    node_obj.position.z = scale*(node.name.getDepth() + origin.z);
+
+    //new position
+    var new_pos = new THREE.Vector3(
+        scale*(weight*Math.cos(angle) + origin.x),
+        scale*(weight*Math.sin(angle) + origin.y),
+        scale*(node.name.getDepth() + origin.z)
+    );
+
+    console.log('constructing '+node.name.title);
+
+    //title
+    var node_title_geo = geo_TextGeometry(node.name.title,0.8);
+    node_title_geo.castShadow = true;
+    node_title_geo.receiveShadow = true;
+    var node_title_obj = new THREE.Mesh(node_title_geo,matte_browishgreen);
+
+    //picture
+    //TODO: not working
+    var pic_texture = THREE.ImageUtils.loadTexture(node.name.pic),
+        pic_material = new THREE.MeshLambertMaterial({ map : pic_texture }),
+        pic_plane_geo = new THREE.PlaneGeometry(2, 4),
+        pic_plane_obj = new THREE.Mesh(pic_plane_geo, pic_material);
+    pic_plane_obj.material.side = THREE.DoubleSide;
+
+    //add objects to scene
+    all_orientables.add(node_title_obj);
+
+    //set positions
+    setPosition(node_title_obj,new_pos);
+    setPosition(pic_plane_obj,new_pos);
+
+    return new_pos;
+};
+
+var construct_scene_children = function(node,origin,angle,weight){
+
+    var node_pos = placeNodeInScene(node,origin,angle,weight);
 
     //add line to connect node to parent
-    scene.add(new THREE.Line(geo_LineGeo(origin,node_obj.position),line_material,THREE.LineStrip));
+    scene.add(new THREE.Line(geo_LineGeo(origin,node_pos),line_material,THREE.LineStrip));
 
     //only constructs if node object doesn't already exist
     var adj = [];
@@ -72,46 +107,30 @@ var construct_scene_children = function(node,geo,mat,origin,angle,weight){
 
     for (var i = 0; i<num_adj; i++){
         if (constructed.length<constructed_limit)
-            construct_scene_children(adj[i],geo,mat,node_obj.position,angle_offset*i,weights[i]);
+            construct_scene_children(adj[i],node_pos,angle_offset*i,weights[i]);
         else
             break;
     }
 };
 
-var construct_scene_parent = function(graph,geo,mat){
+var construct_scene_parent = function(graph){
     //only construct new objects if limit not exceeded
     if (constructed.length<constructed_limit){
 
-        //finds node with maximum number of adjs - use as pivot
         var nodes = graph.getAllNodes(),
-            node_pivot = nodes[0],
-            pivot_length = node_pivot.adjList.length;
+            pivot_node = nodes[0];
 
-        for(var i = 1;i<nodes.length;i++){
-            var cur_node = nodes[i];
-            if (cur_node.adjList.length > pivot_length){
-                node_pivot = cur_node;
-                pivot_length = cur_node.adjList.length;
-            }
-        }
-
-        //make pivot node object
-        constructed.push(node_pivot);
-        var pivot_geo = geo(node_pivot.name.title);
-        pivot_geo.castShadow = true;
-        pivot_geo.receiveShadow = true;
-        var pivot_obj = new THREE.Mesh(pivot_geo,mat);
-        all_orientables.add(pivot_obj);
+        var pivot_pos = placeNodeInScene(pivot_node,new THREE.Vector3(0,0,0),0,0);
 
         //call construct_scene_children on adjs
-        var adj = node_pivot.adjList,
+        var adj = pivot_node.adjList,
             num_adj = adj.length,
-            weights = node_pivot.weight,
-            angle_offset = 2*Math.PI/node_pivot.adjList.length;
+            weights = pivot_node.weight,
+            angle_offset = 2*Math.PI/pivot_node.adjList.length;
 
         for (var j = 0; j<num_adj; j++){
             if (constructed.length<constructed_limit)
-                construct_scene_children(adj[j],geo,mat,pivot_obj.position,angle_offset*j,weights[j]);
+                construct_scene_children(adj[j],pivot_pos,angle_offset*j,weights[j]);
             else
                 break;
         }
@@ -121,15 +140,14 @@ var construct_scene_parent = function(graph,geo,mat){
 
 var populateScene = function(items){
     var graph = getSceneGraph(items);
-    construct_scene_parent(graph,geo_TextGeometry,matte_browishgreen);
+    construct_scene_parent(graph);
 };
 
-var loadScene = function(title){
-    getWikiData(title,50,populateScene);
+var loadScene = function(title,limit){
+    getWikiData(title,limit,populateScene);
 };
 
-loadScene("Philosophy");
-
+loadScene("Philosophy",10);
 
 //other objects in scene
 // create the geometry sphere
