@@ -137,41 +137,39 @@ var construct_scene_parent = function(graph){
     }
 };
 
-
 var populateScene = function(items){
     var graph = getSceneGraph(items);
     construct_scene_parent(graph);
 };
 
 var loadScene = function(title,limit){
+
+    // create the geometry sphere
+    var bg_geo  = new THREE.SphereGeometry(200, 32, 32),
+        bg_mat = new THREE.MeshBasicMaterial();
+    bg_mat.map   = THREE.ImageUtils.loadTexture('assets/space.jpg');
+    bg_mat.side  = THREE.BackSide;
+    var bg  = new THREE.Mesh(bg_geo, bg_mat);
+    scene.add(bg);
+
+    //Lighting
+    var amb_light = new THREE.AmbientLight( 0x404040 ); // soft white light
+    var dir_light_warm = new THREE.DirectionalLight( 0xFFECD1, 0.5 );
+    dir_light_warm.position.set( 5, 10, 5 );
+    dir_light_warm.castShadow = true;
+    dir_light_warm.receiveShadow = true;
+
+    var dir_light_cold = new THREE.DirectionalLight( 0xD1EAFF, 1.0 );
+    dir_light_cold.position.set( -5, -10, -5 );
+    dir_light_cold.castShadow = true;
+    dir_light_cold.receiveShadow = true;
+
+    scene.add( dir_light_warm );
+    scene.add( dir_light_cold );
+    scene.add( amb_light );
+
+    //Node Objects
     getWikiData(title,limit,populateScene);
 };
 
 loadScene("Philosophy",10);
-
-//other objects in scene
-// create the geometry sphere
-geometry  = new THREE.SphereGeometry(200, 32, 32);
-// create the material, using a texture of startfield
-material  = new THREE.MeshBasicMaterial();
-material.map   = THREE.ImageUtils.loadTexture('assets/space.jpg');
-material.side  = THREE.BackSide;
-// create the mesh based on geometry and material
-var bg  = new THREE.Mesh(geometry, material);
-scene.add(bg);
-
-//Lighting
-var amb_light = new THREE.AmbientLight( 0x404040 ); // soft white light
-var dir_light_warm = new THREE.DirectionalLight( 0xFFECD1, 0.5 );
-dir_light_warm.position.set( 5, 10, 5 );
-dir_light_warm.castShadow = true;
-dir_light_warm.receiveShadow = true;
-
-var dir_light_cold = new THREE.DirectionalLight( 0xD1EAFF, 1.0 );
-dir_light_cold.position.set( -5, -10, -5 );
-dir_light_cold.castShadow = true;
-dir_light_cold.receiveShadow = true;
-
-scene.add( dir_light_warm );
-scene.add( dir_light_cold );
-scene.add( amb_light );
