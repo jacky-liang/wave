@@ -4,7 +4,13 @@
  * Depends on three leap controller and leap controller and all their dependencies
  */
 
-const scale = 1.0;
+
+//array of nodes that have already been constructed
+var occupied = [],
+    constructed = [];
+//world wide length dimension scale. used to easily control relative distances and size of 3D objects.
+const scale = 0.7;
+//maximum nodes that can be constructed
 const constructed_limit = 15;
 
 var changeLoadingMsg = function(msg){
@@ -25,9 +31,64 @@ var hideLoadingScreen = function(){
     resetLoadingMsg();
 };
 
-var loadScene = function(){
+//Text Geometry Constructor
+var geo_TextGeometry = function(text,size){
+    return new THREE.TextGeometry( text, {
+        size: size,
+        height: 0.05,
+        curveSegments: 6,
+        font: "helvetiker",
+        weight: "normal",
+        style: "normal" });
+};
+
+//Materials
+var matte_browishgreen = new THREE.MeshPhongMaterial( { color: 0xD0D45D } );
+
+function setPosition(obj,pos){
+    obj.position.x = pos.x;
+    obj.position.y = pos.y;
+    obj.position.z = pos.z;
+}
+
+function checkPosition(pos){
+    var hasRepeats = false;
+    for(var i = 0;i<occupied.length;i++)
+        if(occupied[i].equals(pos)){
+            hasRepeats = true;
+            break;
+        }
+    if(hasRepeats)
+        return checkPosition(pos.add(new THREE.Vector3(0,0,2)));
+    else{
+        occupied.push(pos);
+        return pos;
+    }
+}
+
+var initScene = function(){
 
     showLoadingScreen('Scene');
+
+    //Welcome Text
+    //title
+    var welcome_texts = [
+        'Wave is an interactive app',
+        'that generates 3D visualizations',
+        'of relationships between',
+        'Wikipedia articles',
+        '(compatible with LeapMotion!!)'
+    ];
+    var init_pos = new THREE.Vector3(-2,1.0,0);
+    welcome_texts.forEach(function(text){
+       var text_geo =  geo_TextGeometry(text,0.2);
+        text_geo.castShadow = true;
+        text_geo.receiveShadow = true;
+        var text_obj  = new THREE.Mesh(text_geo,matte_browishgreen);
+        all_orientables.add(text_obj);
+        setPosition(text_obj,init_pos);
+        init_pos = init_pos.add(new THREE.Vector3(0,-0.4,0));
+    });
 
     // create the geometry sphere
     var bg_geo  = new THREE.SphereGeometry(200, 32, 32),
@@ -57,50 +118,6 @@ var loadScene = function(){
 
 };
 
-
-//Object Constructors
-var geo_BoxGeometry = function(x,y,z){
-    return new THREE.BoxGeometry(x,y,z);
-};
-var geo_TextGeometry = function(text,size){
-    return new THREE.TextGeometry( text, {
-        size: size,
-        height: 0.05,
-        curveSegments: 6,
-        font: "helvetiker",
-        weight: "normal",
-        style: "normal" });
-};
-
-//Materials
-var matte_browishgreen = new THREE.MeshPhongMaterial( { color: 0xD0D45D } );
-var matte_lightblue = new THREE.MeshPhongMaterial( {color: 0x9EEDFF} );
-
-//array of nodes that have already been constructed
-var occupied = [],
-    constructed = [];
-
-function setPosition(obj,pos){
-    obj.position.x = pos.x;
-    obj.position.y = pos.y;
-    obj.position.z = pos.z;
-}
-
-function checkPosition(pos){
-    var hasRepeats = false;
-    for(var i = 0;i<occupied.length;i++)
-        if(occupied[i].equals(pos)){
-            hasRepeats = true;
-            break;
-        }
-    if(hasRepeats)
-        return checkPosition(pos.add(new THREE.Vector3(0,0,2)));
-    else{
-        occupied.push(pos);
-        return pos;
-    }
-}
-
 //Helper functions to turn nodes into 3D objects
 var placeNodeInScene = function(node,origin,angle,weight){
     //places node in scene as object
@@ -119,7 +136,7 @@ var placeNodeInScene = function(node,origin,angle,weight){
     changeLoadingMsg(node.name.title);
 
     //title
-    var node_title_geo = geo_TextGeometry(node.name.title,0.8);
+    var node_title_geo = geo_TextGeometry(node.name.title,scale*0.8);
     node_title_geo.castShadow = true;
     node_title_geo.receiveShadow = true;
     var node_title_obj = new THREE.Mesh(node_title_geo,matte_browishgreen);
@@ -185,6 +202,7 @@ var populateScene = function(items){
     hideLoadingScreen();
 };
 
+//Getting desired title from user
 var form = $('#generateTreeForm');
 form.keypress(function(e){
    if(e.which == 13){
@@ -196,4 +214,4 @@ form.keypress(function(e){
    }
 });
 
-loadScene();
+initScene();

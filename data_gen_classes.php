@@ -9,16 +9,16 @@
 require_once('assets/simple_html_dom.php');
 
 function fetchFromWikipedia($url){
-    //get raw json from wikipedia page w/ title name
+    //get raw json from wikipedia page w/ given url
     $ch = curl_init($url);
     curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch, CURLOPT_USERAGENT, "Wave"); // required by wikipedia.org server; use YOUR user agent with YOUR contact information. (otherwise your IP might get blocked)
+    curl_setopt ($ch, CURLOPT_USERAGENT, "Wave");
     $c = curl_exec($ch);
 
     return $c;
 }
 
-function fetchContentFromWikipedia($title){
+function fetchFromWikipediaByTitle($title){
     $url = 'http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page='.urlencode($title);
     return fetchFromWikipedia($url);
 }
@@ -50,8 +50,8 @@ class Item {
 
     public static function constructAnItem($plain_title){
 
-         //get raw json
-        $json = json_decode(fetchContentFromWikipedia($plain_title));
+        //get raw json
+        $json = json_decode(fetchFromWikipediaByTitle($plain_title));
 
         if(property_exists($json,'error'))
             return false;
