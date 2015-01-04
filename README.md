@@ -4,6 +4,11 @@ Wave
 
 An interactive web application that generates 3D visualizations of relationships between Wikipedia articles.
 
+## Demo:
+
+[Wave Demo](wave.ngrok.com)
+(not up 24/7)
+
 ## Use/Navigation:
 
 Wave supports 3D navigation by the Leap Motion controller.
@@ -14,6 +19,8 @@ If you don't have a Leap, then use the following keyboard commands:
 - IJKL for turning up, left, down, and right.
 - QE for going down, up.
 - UO for rolling left, right.
+
+
 
 ## Todo:
 

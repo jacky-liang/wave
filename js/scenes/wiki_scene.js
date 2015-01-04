@@ -73,7 +73,7 @@ var initScene = function(){
     //Welcome Text
     //title
     var welcome_texts = [
-        'Wave is an interactive app',
+        'Wave is an interactive web app',
         'that generates 3D visualizations',
         'of relationships between',
         'Wikipedia articles',
