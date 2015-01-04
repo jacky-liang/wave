@@ -6,7 +6,7 @@ An interactive web application that generates 3D visualizations of relationships
 
 ## Demo:
 
-[Wave Demo](//wave.ngrok.com)
+[Wave Demo](http://wave.ngrok.com)
 (not up 24/7)
 
 ## Use/Navigation:
