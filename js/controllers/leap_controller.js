@@ -1,8 +1,7 @@
 /**
  * Created by Jacky on 9/13/14.
+ * Generate Actionable Navigation Constants that can be used by any rendering script
  */
-    //Generate actionable constants based on leap data
-
     //Enable Leap integration
     var options = { enableGestures: true };
 

@@ -4,11 +4,12 @@
  * User: Jacky
  * Date: 9/10/14
  * Time: 5:21 PM
+ * Function: Debug Leap Motion Data
  */
 
 require('head.php');
 ?>
-<script  src="js/test_controller.js" type="text/javascript"></script>
+<script  src="js/controllers/debug_leap_controller.js" type="text/javascript"></script>
 
 <h1>Gesture Identification</h1>
 

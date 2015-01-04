@@ -1,5 +1,6 @@
 /**
  * Created by Jacky on 9/13/14.
+ * Use Constants Provided by Leap Controller to control Three.js camera navigation
  */
 //NEED LEAP_CONTROLLER.JS
 
@@ -23,10 +24,43 @@ function Orientable(scene){
     this.add = function add(obj){
         this.objects.push(obj);
         this.scene.add(obj);
+    };
+
+    this.reset = function reset(){
+      this.objects.forEach(function(object){
+         this.scene.remove(object);
+      });
+      this.objects = [];
+    };
+}
+
+function Connections(scene){
+    //list of line objects
+    this.connections = [];
+    this.scene = scene;
+    this.line_material = new THREE.LineBasicMaterial({color: 0x9EEDFF});
+
+    this.add = function add(from,to){
+        var line = new THREE.Geometry();
+        line.vertices.push(from);
+        line.vertices.push(to);
+
+        var connection = new THREE.Line(line,this.line_material,THREE.LineStrip);
+        this.connections.push(connection);
+        scene.add(connection);
+    };
+
+    this.reset = function reset(){
+      this.connections.forEach(function(connection){
+          this.scene.remove(connection);
+      });
+        this.connections = [];
     }
 }
+
 //the only orientable instance that needs to be used
 var all_orientables = new Orientable(scene);
+var all_connections = new Connections(scene);
 
 //Append Renderer
 var renderer = new THREE.WebGLRenderer();

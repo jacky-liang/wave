@@ -1,12 +1,8 @@
 /**
  * Created by jacky on 12/28/14.
+ * Interface for data transmission between frontend and backend
  */
-function enableLoading(title){
-    console.log('loading '+title);
-}
-
 function getWikiData(title,limit,fn){
-    enableLoading(title);
     console.log('limit to '+limit);
     $.get( "data_gen.php",
         { title: title, limit: limit },

@@ -4,8 +4,9 @@
  * User: jacky
  * Date: 12/29/14
  * Time: 10:55 PM
+ * Function: Item Data Abstraction and Data Retrieval from Wikipedia
  */
-require_once('simple_html_dom.php');
+require_once('assets/simple_html_dom.php');
 
 function fetchFromWikipedia($url){
     //get raw json from wikipedia page w/ title name
@@ -65,6 +66,9 @@ class Item {
             return Item::constructAnItem($matches[1]);
         }
 
+        if(sizeof(Title::$parsed_titles) == 0)
+            Title::includeTitle($plain_title);
+
         //make dom object
         $first_p = $html->find('p',0);
 
@@ -84,7 +88,7 @@ class Item {
                 continue;
             $cur_url = $raw_title_attr['href'];
             $cur_title = $raw_title_attr['title'];
-            if(Title::is_valid($cur_url))
+            if(Title::is_valid($cur_url,$cur_title))
                 array_push($titles,new Title($cur_title,$cur_url));
         }
 
@@ -94,13 +98,17 @@ class Item {
 
 class Title{
 
-    public static $parsed_url = array();
+    public static $parsed_titles = array();
+
+    public static function includeTitle($title){
+        array_push(self::$parsed_titles,strtolower($title));
+    }
 
     public function Title($title, $url){
         $this->title = $title;
         $this->url = $url;
         $this->title_url = $this->get_title_url($url);
-        array_push(self::$parsed_url,$url);
+        self::includeTitle($title);
         return true;
     }
 
@@ -110,9 +118,9 @@ class Title{
         return $matches[1];
     }
 
-    public static function is_valid($url){
+    public static function is_valid($url,$title){
         if( strpos($url,'Help:') == false &&
-            !in_array($url,self::$parsed_url))
+            !in_array(strtolower($title),self::$parsed_titles))
             return true;
         else
             return false;

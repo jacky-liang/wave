@@ -1,5 +1,6 @@
 /**
  * Created by jacky on 12/28/14.
+ * Item Data Abstraction
  */
 
 const depth_scaling = 3,
