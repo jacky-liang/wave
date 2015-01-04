@@ -27,6 +27,7 @@ require_once('head.php');
 
 
     <script  src="js/controllers/leap_controller.js" type="text/javascript"></script>
+    <script  src="js/controllers/keyboard_controller.js" type="text/javascript"></script>
     <script  src="js/controllers/three_leap_controller.js" type="text/javascript"></script>
     <script  src="js/scenes/wiki_scene.js" type="text/javascript"></script>
 </body>

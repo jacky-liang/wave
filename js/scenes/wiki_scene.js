@@ -205,6 +205,7 @@ var populateScene = function(items){
 //Getting desired title from user
 var form = $('#generateTreeForm');
 form.keypress(function(e){
+    e.stopPropagation();
    if(e.which == 13){
        var value = form.val();
        if(value){
@@ -212,6 +213,14 @@ form.keypress(function(e){
            getWikiData(value,constructed_limit,populateScene);
        }
    }
+});
+
+form.focus(function(){
+    allow_key_board = false;
+});
+
+form.focusout(function(){
+    allow_key_board = true;
 });
 
 initScene();

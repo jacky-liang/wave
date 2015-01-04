@@ -73,41 +73,83 @@ camera.position.z = 5;
 
 function render() {
 
+    /*Navigation Control for Leap*/
+
     //Along viewing angle
-    if(go_forward >= 0)
+    if(go_forward || key_pressed.w)
         camera.translateZ(-0.1*go_forward);
-    if(go_backward >= 0)
+    if(go_backward >= 0 || key_pressed.s)
         camera.translateZ(0.1*go_backward);
 
     //Elevation
-    if(go_up >= 0)
+    if(go_up)
         camera.translateY(0.1*go_up);
-    if(go_down >= 0)
+    if(go_down)
         camera.translateY(-0.1*go_down);
 
     //Dolly
-    if(dolly_left >= 0)
+    if(dolly_left)
         camera.translateX(-0.1*dolly_left);
-    if(dolly_right >=0)
+    if(dolly_right)
         camera.translateX(0.1*dolly_right);
 
     //Rotate up/down
-    if(look_up >=0)
+    if(look_up)
         camera.rotateX(0.03*look_up);
-    if(look_down >= 0)
+    if(look_down)
         camera.rotateX(-0.03*look_down);
 
     //Rotate left/right
-    if(look_left_y >= 0)
+    if(look_left_y)
         camera.rotateY(0.03*look_left_y);
-    if(look_right_y >=0)
+    if(look_right_y)
         camera.rotateY(-0.03*look_right_y);
 
     //Turn left/right
-    if(turn_left_r >= 0)
+    if(turn_left_r)
         camera.rotateZ(0.03*turn_left_r);
-    if(turn_right_r >=0)
+    if(turn_right_r)
         camera.rotateZ(-0.03*turn_right_r);
+
+
+    /*Navigation COntrol for Keyboard */
+    const speed = 0.5;
+    //Along viewing angle
+    if(key_pressed.w)
+        camera.translateZ(-0.1*speed);
+    if(key_pressed.s)
+        camera.translateZ(0.1*speed);
+
+    //Elevation
+    if(key_pressed.e)
+        camera.translateY(0.1*speed);
+    if(key_pressed.q)
+        camera.translateY(-0.1*speed);
+
+    //Dolly
+    if(key_pressed.a)
+        camera.translateX(-0.1*speed);
+    if(key_pressed.d)
+        camera.translateX(0.1*speed);
+
+    //Rotate up/down
+    if(key_pressed.i)
+        camera.rotateX(0.03*speed);
+    if(key_pressed.k)
+        camera.rotateX(-0.03*speed);
+
+    //Rotate left/right
+    if(key_pressed.j)
+        camera.rotateY(0.03*speed);
+    if(key_pressed.l)
+        camera.rotateY(-0.03*speed);
+
+    //Turn left/right
+    if(key_pressed.u)
+        camera.rotateZ(0.03*speed);
+    if(key_pressed.o)
+        camera.rotateZ(-0.03*speed);
+
 
     all_orientables.orient(camera);
 
