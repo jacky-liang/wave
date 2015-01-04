@@ -2,7 +2,7 @@ Wave
 ====
 ## What it is:
 
-An interactive web application that generates 3D visualizations of relationships between Wikipedia Articles.
+An interactive web application that generates 3D visualizations of relationships between Wikipedia articles.
 
 ## Use/Navigation:
 
