@@ -112,7 +112,8 @@ function render() {
         camera.rotateZ(-0.03*turn_right_r);
 
 
-    /*Navigation COntrol for Keyboard */
+    /*Navigation Control for Keyboard */
+
     const speed = 0.5;
     //Along viewing angle
     if(key_pressed.w)
