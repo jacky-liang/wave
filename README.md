@@ -1,4 +1,4 @@
-wave
+Wave
 ====
 ## What it is:
 
