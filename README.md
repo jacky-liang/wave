@@ -11,7 +11,7 @@ Wave supports 3D navigation by the Leap Motion controller.
 If you don't have a Leap, then use the following keyboard commands:
 
 - WASD for going forward, leftward, backward, and rightward.
-- IJKL for turning up, down, left, and right.
+- IJKL for turning up, left, down, and right.
 - QE for going down, up.
 - UO for rolling left, right.
 
