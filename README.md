@@ -20,8 +20,6 @@ If you don't have a Leap, then use the following keyboard commands:
 - QE for going down, up.
 - UO for rolling left, right.
 
-
-
 ## Todo:
 
 - add use directions

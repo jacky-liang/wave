@@ -45,12 +45,6 @@ var geo_TextGeometry = function(text,size){
 //Materials
 var matte_browishgreen = new THREE.MeshPhongMaterial( { color: 0xD0D45D } );
 
-function setPosition(obj,pos){
-    obj.position.x = pos.x;
-    obj.position.y = pos.y;
-    obj.position.z = pos.z;
-}
-
 function checkPosition(pos){
     var hasRepeats = false;
     for(var i = 0;i<occupied.length;i++)
@@ -222,5 +216,7 @@ form.focus(function(){
 form.focusout(function(){
     allow_key_board = true;
 });
+
+//
 
 initScene();

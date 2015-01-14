@@ -1,3 +1,4 @@
+/*Global*/
 body{
     font-size: 16px;
     color: #ebebeb;
@@ -6,6 +7,7 @@ body{
     overflow:hidden;
 }
 
+/*Input Bar*/
 .info-input-container{
     width: 100%;
     position: absolute;
@@ -19,11 +21,26 @@ body{
     border: none;
     color: inherit;
     width: 100%;
+    font-size: 1rem;
 }
 
 .info-input-container input[type=text]:focus{
     outline: none;
 }
+
+/*Settings*/
+.settings-container{
+    position: absolute;
+    margin: 2rem 1rem;
+}
+.settings-btn{
+    margin: 0.3rem;
+    padding: 0.2rem;
+    cursor: pointer;
+    background-image: url("/assets/clear_70.png");
+    font-size: 0.8rem;
+}
+
 
 /*Loading Spinner*/
 @keyframes spinner {

@@ -25,9 +25,15 @@ require_once('head.php');
         <input type="text" placeholder="Enter a Wikipedia Article Title Here" id="generateTreeForm">
     </div>
 
+    <div class="settings-container">
+        <div class="settings-btn" id="toggleVR">Toggle VR Mode (v)</div>
+        <div class="settings-btn" id="toggleOrient">Toggle Auto Text Orient (c)</div>
+    </div>
 
     <script  src="js/controllers/leap_controller.js" type="text/javascript"></script>
     <script  src="js/controllers/keyboard_controller.js" type="text/javascript"></script>
+    <script src="js/controllers/three_starter.js" type="text/javascript"></script>
+    <script src="js/controllers/oculus_controller.js" type="text/javascript"></script>
     <script  src="js/controllers/three_leap_controller.js" type="text/javascript"></script>
     <script  src="js/scenes/wiki_scene.js" type="text/javascript"></script>
 </body>
