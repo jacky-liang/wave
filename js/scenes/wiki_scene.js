@@ -66,9 +66,10 @@ var constructWelcomeTexts = function(){
     var welcome_texts = [
         'Wave is an interactive web app',
         'that generates 3D visualizations',
-        'of relationships between',
+        'of relationships among',
         'Wikipedia articles',
-        '(compatible with LeapMotion!!)'
+        '(compatible with LeapMotion and ',
+        'Oculus Rift!!!)'
     ];
     var init_pos = new THREE.Vector3(-2,1.0,0);
     welcome_texts.forEach(function(text){
@@ -204,13 +205,14 @@ var populateScene = function(items){
 var form = $('#generateTreeForm');
 form.keypress(function(e){
     e.stopPropagation();
-   if(e.which == 13){
+    if(e.which == 13){
        var value = form.val();
        if(value){
            showLoadingScreen(value);
            getWikiData(value,constructed_limit,populateScene);
+           form.focusout();
        }
-   }
+    }
 });
 
 form.focus(function(){
@@ -219,6 +221,7 @@ form.focus(function(){
 
 form.focusout(function(){
     allow_key_board = true;
+
 });
 
 initScene();
@@ -235,14 +238,11 @@ var reset = function(){
     hideLoadingScreen();
 };
 
-$('document').keydown(function(e){
-    console.log('from wiki scene');
-
-
-});
-
 $("#reset").click(function(){
     reset();
+});
+$("#origin").click(function(){
+    resetCamera();
 });
 $("#enableVR").click(function(){
     enableVRMode();

@@ -7,6 +7,16 @@ body{
     overflow:hidden;
 }
 
+h1{
+    font-size: 1rem;
+}
+h3{
+    font-size: 0.8rem;
+}
+p{
+    font-size: 0.8rem;
+}
+
 /*Input Bar*/
 .info-input-container{
     width: 100%;
@@ -47,6 +57,18 @@ body{
     background-image: url("/assets/clear_30.png");
 }
 
+/*Instructions*/
+.instructions-container{
+    position: absolute;
+    right: 0;
+    margin: 2rem 1rem;
+    background-image: url("/assets/clear_70.png");
+    padding: 0.5rem;
+}
+
+.instructions-block{
+    margin: 1rem 0;
+}
 
 
 /*Loading Spinner*/

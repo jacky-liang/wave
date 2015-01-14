@@ -57,6 +57,8 @@ $(document).keydown(function(e){
         enableVRMode();
     else if(e.keyCode == "T".charCodeAt(0))
         toggleOrient();
+    else if(e.keyCode == "G".charCodeAt(0))
+        resetCamera();
 
     var key = codeToChar(e.which);
     if(key_pressed.hasOwnProperty(key) && allow_key_board)

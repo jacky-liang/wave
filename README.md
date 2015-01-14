@@ -10,6 +10,7 @@ An interactive web application that generates 3D visualizations of relationships
 (not up 24/7)
 
 ## Use/Navigation:
+*NEW* Added VR Support for Oculus Rift. Needs Firefox VR or Chromium Browser.
 
 Wave supports 3D navigation by the Leap Motion controller.
 
@@ -22,11 +23,10 @@ If you don't have a Leap, then use the following keyboard commands:
 
 ## Todo:
 
-- add use directions
+- search item while in VR mode
 - frontend support for article pictures
 - remove citation links from results
 - handle ambiguous targets
-- make compatible with Oculus Rift
 
 ## License
 

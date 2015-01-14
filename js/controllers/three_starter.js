@@ -6,6 +6,7 @@
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 0.1, 1000 );
 var renderer = new THREE.WebGLRenderer();
+var CAMERA_ORIGIN_POSITION = new THREE.Vector3(0,0,5);
 
 renderer.setClearColor(0x202020, 1.0);
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -14,7 +15,7 @@ renderer.shadowMapEnabled = true;
 //Custom Three.js Helper Code
 
 function resetCamera(){
-    camera.position.z = 5;
+    setPosition(camera,CAMERA_ORIGIN_POSITION);
 }
 
 function setPosition(obj,pos){

@@ -27,8 +27,23 @@ require_once('head.php');
 
     <div class="settings-container">
         <div class="settings-btn" id="reset">Reset Scene (R)</div>
+        <div class="settings-btn" id="origin">Go to Origin (G)</div>
         <div class="settings-btn" id="enableVR">Enable VR Mode (V)</div>
         <div class="settings-btn" id="toggleOrient">Toggle Auto Text Orient (T)</div>
+    </div>
+
+    <div class="instructions-container">
+        <h1>Instructions:</h1>
+        <div class="instructions-block">
+            <p>If you don't have a Leap Motion, use following buttons to navigate:</p>
+            <p>-Position: WASD : Forward, Leftward, Backward, Rightward</p>
+            <p>QE : Upwards, Downwards</p>
+            <p>-Rotation: IJKL : Up, Down, Left, Right</p>
+            <p>UO : Roll Left, Roll Right</p>
+        </div>
+        <div class="instructions-block">
+            <p>Note: VR support needs Firefox VR or Chromium</p>
+        </div>
     </div>
 
     <script  src="js/controllers/leap_controller.js" type="text/javascript"></script>
