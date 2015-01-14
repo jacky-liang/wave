@@ -13,6 +13,10 @@ renderer.shadowMapEnabled = true;
 
 //Custom Three.js Helper Code
 
+function resetCamera(){
+    camera.position.z = 5;
+}
+
 function setPosition(obj,pos){
     obj.position.x = pos.x;
     obj.position.y = pos.y;

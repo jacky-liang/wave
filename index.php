@@ -26,8 +26,9 @@ require_once('head.php');
     </div>
 
     <div class="settings-container">
-        <div class="settings-btn" id="toggleVR">Toggle VR Mode (v)</div>
-        <div class="settings-btn" id="toggleOrient">Toggle Auto Text Orient (c)</div>
+        <div class="settings-btn" id="reset">Reset Scene (R)</div>
+        <div class="settings-btn" id="enableVR">Enable VR Mode (V)</div>
+        <div class="settings-btn" id="toggleOrient">Toggle Auto Text Orient (T)</div>
     </div>
 
     <script  src="js/controllers/leap_controller.js" type="text/javascript"></script>

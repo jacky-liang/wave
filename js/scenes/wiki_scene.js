@@ -60,10 +60,7 @@ function checkPosition(pos){
     }
 }
 
-var initScene = function(){
-
-    showLoadingScreen('Scene');
-
+var constructWelcomeTexts = function(){
     //Welcome Text
     //title
     var welcome_texts = [
@@ -75,7 +72,7 @@ var initScene = function(){
     ];
     var init_pos = new THREE.Vector3(-2,1.0,0);
     welcome_texts.forEach(function(text){
-       var text_geo =  geo_TextGeometry(text,0.2);
+        var text_geo =  geo_TextGeometry(text,0.2);
         text_geo.castShadow = true;
         text_geo.receiveShadow = true;
         var text_obj  = new THREE.Mesh(text_geo,matte_browishgreen);
@@ -83,6 +80,13 @@ var initScene = function(){
         setPosition(text_obj,init_pos);
         init_pos = init_pos.add(new THREE.Vector3(0,-0.4,0));
     });
+};
+
+var initScene = function(){
+
+    showLoadingScreen('Scene');
+
+    constructWelcomeTexts();
 
     // create the geometry sphere
     var bg_geo  = new THREE.SphereGeometry(200, 32, 32),
@@ -217,6 +221,32 @@ form.focusout(function(){
     allow_key_board = true;
 });
 
-//
-
 initScene();
+
+//Settings
+var reset = function(){
+    console.log("resetting everything");
+    showLoadingScreen();
+
+    resetScene();
+    constructWelcomeTexts();
+    resetCamera();
+
+    hideLoadingScreen();
+};
+
+$('document').keydown(function(e){
+    console.log('from wiki scene');
+
+
+});
+
+$("#reset").click(function(){
+    reset();
+});
+$("#enableVR").click(function(){
+    enableVRMode();
+});
+$("#toggleOrient").click(function(){
+    toggleOrient();
+});

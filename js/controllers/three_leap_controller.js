@@ -28,6 +28,13 @@ function Orientable(scene){
       });
       this.objects = [];
     };
+
+    this.resetOrientation = function resetOrientation(){
+        var originOrientation = new THREE.Quaternion(0,0,0,0);
+        this.objects.forEach(function(object){
+            setQuaternion(object,originOrientation);
+        });
+    };
 }
 
 function Connections(scene){
@@ -54,14 +61,16 @@ function Connections(scene){
     }
 }
 
-var allow_orient = true;
-function toggleOrient(){
-    allow_orient = !allow_orient;
-}
-
 //the only orientable instance that needs to be used
 var all_orientables = new Orientable(scene);
 var all_connections = new Connections(scene);
+
+var allow_orient = true;
+function toggleOrient(){
+    console.log("toggling orient");
+    allow_orient = !allow_orient;
+    all_orientables.resetOrientation();
+}
 
 //Oculus Integration
 resize();
@@ -85,17 +94,14 @@ function onFullscreenChange() {
 document.addEventListener("webkitfullscreenchange", onFullscreenChange, false);
 document.addEventListener("mozfullscreenchange", onFullscreenChange, false);
 
-var vrBtn = document.getElementById("vrBtn");
-if (vrBtn) {
-    vrBtn.addEventListener("click", function() {
-        vrMode = true;
-        resize();
-        if (renderer.domElement.webkitRequestFullscreen) {
-            renderer.domElement.webkitRequestFullscreen({ vrDisplay: hmdDevice });
-        } else if (renderer.domElement.mozRequestFullScreen) {
-            renderer.domElement.mozRequestFullScreen({ vrDisplay: hmdDevice });
-        }
-    }, false);
+function enableVRMode(){
+    console.log('enabling vr mode');
+    vrMode = true;
+    resize();
+    if (renderer.domElement.webkitRequestFullscreen)
+        renderer.domElement.webkitRequestFullscreen({ vrDisplay: hmdDevice });
+    else if (renderer.domElement.mozRequestFullScreen)
+        renderer.domElement.mozRequestFullScreen({ vrDisplay: hmdDevice });
 }
 
 window.addEventListener("vrdeviceactivated", function(ev) {
@@ -107,7 +113,7 @@ window.addEventListener("vrdevicedeactivated", function(ev) {
 });
 
 //Set Camera
-camera.position.z = 5;
+resetCamera();
 
 function render() {
 

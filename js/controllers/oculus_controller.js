@@ -179,20 +179,6 @@ if (navigator.getVRDevices) {
     console.log("WebVR API not supported");
 }
 
-window.addEventListener("keydown", function(ev) {
-    if (hmdDevice) {
-        if (ev.keyCode == "R".charCodeAt(0))  {
-            sensorDevice.zeroSensor();
-        }
-        if (ev.keyCode == 187 || ev.keyCode == 61)  { // "+" key
-            resizeFOV(0.1);
-        }
-        if (ev.keyCode == 189 || ev.keyCode == 173)  { // "-" key
-            resizeFOV(-0.1);
-        }
-    }
-});
-
 function updateVRCamera() {
     if (!sensorDevice) return false;
     var vrState = sensorDevice.getState();

@@ -51,6 +51,13 @@ function codeToChar(code){
 var allow_key_board = true;
 
 $(document).keydown(function(e){
+    if(e.keyCode == "R".charCodeAt(0))
+        reset();
+    else if(e.keyCode == "V".charCodeAt(0))
+        enableVRMode();
+    else if(e.keyCode == "T".charCodeAt(0))
+        toggleOrient();
+
     var key = codeToChar(e.which);
     if(key_pressed.hasOwnProperty(key) && allow_key_board)
         key_pressed[key] = true;

@@ -11,7 +11,7 @@ body{
 .info-input-container{
     width: 100%;
     position: absolute;
-    background-image: url('/assets/clear_50.png');
+    background-image: url('/assets/clear_70.png');
     z-index: 1;
 }
 
@@ -35,11 +35,18 @@ body{
 }
 .settings-btn{
     margin: 0.3rem;
-    padding: 0.2rem;
+    padding: 0.5rem;
     cursor: pointer;
     background-image: url("/assets/clear_70.png");
     font-size: 0.8rem;
 }
+.settings-btn:hover{
+    background-image: url("/assets/clear_50.png");
+}
+.settings-btn:active{
+    background-image: url("/assets/clear_30.png");
+}
+
 
 
 /*Loading Spinner*/
